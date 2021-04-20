@@ -1,0 +1,11 @@
+on:
+  pull_request
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+    - run: node index.js ${{ secrets.SECRET_KEY }}
