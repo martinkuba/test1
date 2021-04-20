@@ -1,7 +1,7 @@
 name: Remove labels
 on:
   pull_request_target:
-    types: [edited]
+    types: [synchronize, reopened]
 
 jobs:
   remove_labels:
