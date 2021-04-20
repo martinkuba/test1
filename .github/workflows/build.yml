@@ -1,13 +1,17 @@
 on:
-  pull_request
+  pull_request_target:
+    types: [labeled]
 
 jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     env:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
     - uses: actions/setup-node@v1
     - run: node index.js ${{ secrets.SECRET_KEY }}
