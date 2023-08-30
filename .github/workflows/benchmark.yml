@@ -1,0 +1,11 @@
+name: Benchmark tests
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  run_benchmarks:
+    runs-on: ubuntu-latest
+    steps:
+      - run: node index.js
