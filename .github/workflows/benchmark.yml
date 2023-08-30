@@ -3,6 +3,7 @@ name: Benchmark tests
 on:
   release:
     types: [published]
+  pull_request:
 
 jobs:
   run_benchmarks:
