@@ -1,0 +1,44 @@
+name: SBOM
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+          
+permissions: read-all
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    env:
+      NPM_CONFIG_UNSAFE_PERM: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install -g npm@latest
+
+      - name: Bootstrap
+        run: npm ci
+
+      - name: Generate SBOM for the whole repository
+        run: |
+          npm sbom --sbom-format=spdx --legacy-peer-deps > test1.spdx.json
+
+      - name: Zip all SBOM files
+        run: |
+          zip sbom.zip *.spdx.json
+
+      - name: Upload Asset
+        if: startsWith(github.ref, 'experimental/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./sbom.zip
+          asset_name: SBOM.zip
+          asset_content_type: application/zip
