@@ -33,7 +33,7 @@ jobs:
           zip sbom.zip *.spdx.json
 
       - name: Upload Asset
-        if: startsWith(github.ref, 'experimental/')
+        if: startsWith(github.ref, 'refs/tags/experimental/')
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
